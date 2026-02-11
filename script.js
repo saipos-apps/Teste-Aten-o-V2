@@ -156,8 +156,9 @@ async function clicarBotaoProximo() {
         prepararTextoOrientacao();
     } else {
         await enviarParaMake();
-        alert("Teste finalizado com sucesso!");
-        window.location.reload();
+        // AQUI ESTÁ A ALTERAÇÃO:
+        document.getElementById('tela-teste').classList.remove('ativa');
+        document.getElementById('tela-finalizacao').classList.add('ativa');
     }
 }
 
@@ -176,5 +177,4 @@ async function enviarParaMake() {
             body: JSON.stringify(dados) 
         }); 
     } catch (e) { console.error("Erro no envio"); }
-
 }
