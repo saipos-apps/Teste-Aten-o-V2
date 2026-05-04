@@ -49,3 +49,9 @@
     <script src="script.js"></script>
 </body>
 </html>
+<script>
+    // Quando o teste finalizar
+    window.parent.postMessage({
+        type: 'teste-atencao-finalizado'
+    }, '*');
+</script>
