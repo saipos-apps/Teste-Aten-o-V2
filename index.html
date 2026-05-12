@@ -15,6 +15,10 @@
             <div class="campos-topo">
                 <input type="text" id="nomeAluno" placeholder="Nome Completo">
                 <input type="email" id="emailAluno" placeholder="E-mail">
+                
+                <p style="color: #d9534f; font-size: 0.85em; margin-top: 5px; text-align: left; font-weight: 600;">
+                    * Atenção: Por favor, utilize o mesmo e-mail informado nos outros testes.
+                </p>
             </div>
             <button onclick="irParaOrientacoes()">Iniciar</button>
         </div>
@@ -40,19 +44,15 @@
         </div>
 
         <div id="tela-finalizacao" class="tela">
-            <h2>Teste Finalizado!</h2>
-            <p>Seu teste foi concluído com sucesso e suas respostas foram enviadas.</p>
+            <h2>Testes Finalizados!</h2>
+            <p>Seu teste foi concluído com sucesso e suas respostas foram enviadas automaticamente.</p>
             <br>
-            <button onclick="window.location.reload()">Voltar para o Menu Inicial</button>
+            <p style="font-weight: bold; font-size: 1.1em; color: #333;">
+                Clique no botão verde para finalizar a bateria de testes.
+            </p>
         </div>
-        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
-<script>
-
-    // Quando teste terminar
-window.parent.postMessage({
-    type: 'teste-atencao-finalizado'
-}, '*');
-
