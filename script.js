@@ -2,9 +2,9 @@ const urlWebhook = "https://hook.us2.make.com/nohbwfnl23c550xibh284m4vfk6vnr9x";
 
 // Tempos específicos por etapa em segundos
 const TEMPOS_POR_ETAPA = {
-    1: 90,  // 1 minuto e 30 segundos
-    2: 180, // 3 minutos
-    3: 120  // 2 minutos
+    1: 15,  // 1 minuto e 30 segundos
+    2: 15, // 3 minutos
+    3: 15  // 2 minutos
 };
 
 let etapaAtual = 1; 
@@ -120,45 +120,57 @@ function iniciarCronometro() {
     }, 1000);
 }
 
-function finalizarTempo() {
+async function finalizarTempo() {
     document.getElementById('overlay').classList.add('desativado');
     const containerProximo = document.getElementById('area-proxima-etapa');
     const botaoProximo = containerProximo.querySelector('button');
     
-    if (etapaAtual === 3) {
-        botaoProximo.innerText = "Finalizar o Teste";
-    } else {
-        botaoProximo.innerText = "Avançar para Próxima Etapa";
-    }
-    containerProximo.style.display = "block";
-    
     const gabarito = etapaAtual === 1 ? gabaritoE1 : (etapaAtual === 2 ? gabaritoE2 : gabaritoE3);
     const colunas = etapaAtual === 1 ? 15 : (etapaAtual === 2 ? 12 : 16);
     let acertos = 0, erros = 0, ultimoId = 0;
+    
     selecionados.forEach(id => {
         if (gabarito.includes(id)) { acertos++; if (id > ultimoId) ultimoId = id; }
         else erros++;
     });
+    
     const linhaFinal = Math.ceil(ultimoId / colunas) || 0;
     const base = gabarito.filter(id => id <= (linhaFinal * colunas)).length;
     let pontos = Math.max(0, acertos - erros);
     
-    // --- ALTERAÇÃO AQUI: Agora guarda apenas o número (Ex: 85 em vez de "85%") ---
+    // Guarda apenas o número
     notas[`etapa${etapaAtual}`] = base > 0 ? Math.round((pontos / base) * 100) : 0;
+
+    // --- Lógica de Finalização ---
+    if (etapaAtual === 3) {
+        // Oculta o botão de avançar na última etapa
+        containerProximo.style.display = "none";
+        
+        await enviarParaMake(); // Envia os dados para o webhook do Make
+        
+        // Exibe a tela de finalização automaticamente
+        document.getElementById('tela-teste').classList.remove('ativa');
+        document.getElementById('tela-finalizacao').classList.add('ativa');
+        
+        // Envia a mensagem para a janela/iframe pai
+        window.parent.postMessage({
+            type: 'teste-atencao-finalizado'
+        }, '*');
+        
+    } else {
+        // Se for etapa 1 ou 2, mostra o botão para avançar normalmente
+        botaoProximo.innerText = "Avançar para Próxima Etapa";
+        containerProximo.style.display = "block";
+    }
 }
 
-async function clicarBotaoProximo() {
+function clicarBotaoProximo() {
     if (etapaAtual < 3) {
         alert(`Etapa ${etapaAtual} concluída.`);
         etapaAtual++;
         document.getElementById('tela-teste').classList.remove('ativa');
         document.getElementById('tela-orientacoes').classList.add('ativa');
         prepararTextoOrientacao();
-    } else {
-        await enviarParaMake();
-        // AQUI ESTÁ A ALTERAÇÃO:
-        document.getElementById('tela-teste').classList.remove('ativa');
-        document.getElementById('tela-finalizacao').classList.add('ativa');
     }
 }
 
