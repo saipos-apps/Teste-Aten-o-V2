@@ -2,9 +2,9 @@ const urlWebhook = "https://hook.us2.make.com/nohbwfnl23c550xibh284m4vfk6vnr9x";
 
 // Tempos específicos por etapa em segundos
 const TEMPOS_POR_ETAPA = {
-    1: 15,  // 1 minuto e 30 segundos
-    2: 15, // 3 minutos
-    3: 15  // 2 minutos
+    1: 90,  // 1 minuto e 30 segundos
+    2: 180, // 3 minutos
+    3: 120  // 2 minutos
 };
 
 let etapaAtual = 1; 
